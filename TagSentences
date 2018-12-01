@@ -1,0 +1,150 @@
+Sentence 0:
+===========
+Turing was born in Maida Vale, London, while his father, Julius Mathison Turing (1873–1947), was on leave from his position with the Indian Civil Service (ICS) at Chatrapur, then in the Madras Presidency and presently in Odisha state, in British India.
+.......................................
+('Turing', 'PERSON'),('was', 'O'),('born', 'O'),('in', 'O'),('Maida', 'LOCATION'),('Vale', 'LOCATION'),(',', 'O'),('London', 'LOCATION'),(',', 'O'),('while', 'O'),('his', 'O'),('father', 'O'),(',', 'O'),('Julius', 'PERSON'),('Mathison', 'PERSON'),('Turing', 'PERSON'),('(', 'O'),('1873–1947', 'O'),(')', 'O'),(',', 'O'),('was', 'O'),('on', 'O'),('leave', 'O'),('from', 'O'),('his', 'O'),('position', 'O'),('with', 'O'),('the', 'O'),('Indian', 'ORGANIZATION'),('Civil', 'ORGANIZATION'),('Service', 'ORGANIZATION'),('(', 'O'),('ICS', 'O'),(')', 'O'),('at', 'O'),('Chatrapur', 'LOCATION'),(',', 'O'),('then', 'O'),('in', 'O'),('the', 'O'),('Madras', 'LOCATION'),('Presidency', 'O'),('and', 'O'),('presently', 'O'),('in', 'O'),('Odisha', 'LOCATION'),('state', 'O'),(',', 'O'),('in', 'O'),('British', 'O'),('India', 'LOCATION'),('.', 'O')
+_______________________________________
+Sentence 1:
+===========
+Turing's father was the son of a clergyman, the Rev.
+.......................................
+('Turing', 'PERSON'),("'s", 'O'),('father', 'O'),('was', 'O'),('the', 'O'),('son', 'O'),('of', 'O'),('a', 'O'),('clergyman', 'O'),(',', 'O'),('the', 'O'),('Rev', 'O'),('.', 'O')
+_______________________________________
+Sentence 2:
+===========
+John Robert Turing, from a Scottish family of merchants that had been based in the Netherlands and included a baronet.
+.......................................
+('John', 'PERSON'),('Robert', 'PERSON'),('Turing', 'PERSON'),(',', 'O'),('from', 'O'),('a', 'O'),('Scottish', 'O'),('family', 'O'),('of', 'O'),('merchants', 'O'),('that', 'O'),('had', 'O'),('been', 'O'),('based', 'O'),('in', 'O'),('the', 'O'),('Netherlands', 'LOCATION'),('and', 'O'),('included', 'O'),('a', 'O'),('baronet', 'O'),('.', 'O')
+_______________________________________
+Sentence 3:
+===========
+Turing's mother, Julius' wife, was Ethel Sara Turing (née Stoney 1881–1976), daughter of Edward Waller Stoney, chief engineer of the Madras Railways.
+.......................................
+('Turing', 'PERSON'),("'s", 'O'),('mother', 'O'),(',', 'O'),('Julius', 'PERSON'),("'", 'O'),('wife', 'O'),(',', 'O'),('was', 'O'),('Ethel', 'PERSON'),('Sara', 'PERSON'),('Turing', 'PERSON'),('(', 'O'),('née', 'O'),('Stoney', 'O'),('1881–1976', 'O'),(')', 'O'),(',', 'O'),('daughter', 'O'),('of', 'O'),('Edward', 'PERSON'),('Waller', 'PERSON'),('Stoney', 'PERSON'),(',', 'O'),('chief', 'O'),('engineer', 'O'),('of', 'O'),('the', 'O'),('Madras', 'ORGANIZATION'),('Railways', 'ORGANIZATION'),('.', 'O')
+_______________________________________
+Sentence 4:
+===========
+The Stoneys were a Protestant Anglo-Irish gentry family from both County Tipperary and County Longford, while Ethel herself had spent much of her childhood in County Clare.
+.......................................
+('The', 'O'),('Stoneys', 'O'),('were', 'O'),('a', 'O'),('Protestant', 'O'),('Anglo-Irish', 'O'),('gentry', 'O'),('family', 'O'),('from', 'O'),('both', 'O'),('County', 'O'),('Tipperary', 'O'),('and', 'O'),('County', 'LOCATION'),('Longford', 'LOCATION'),(',', 'O'),('while', 'O'),('Ethel', 'PERSON'),('herself', 'O'),('had', 'O'),('spent', 'O'),('much', 'O'),('of', 'O'),('her', 'O'),('childhood', 'O'),('in', 'O'),('County', 'O'),('Clare', 'PERSON'),('.', 'O')
+_______________________________________
+Sentence 5:
+===========
+Julius' work with the ICS brought the family to British India, where his grandfather had been a general in the Bengal Army.
+.......................................
+('Julius', 'PERSON'),("'", 'O'),('work', 'O'),('with', 'O'),('the', 'O'),('ICS', 'O'),('brought', 'O'),('the', 'O'),('family', 'O'),('to', 'O'),('British', 'O'),('India', 'LOCATION'),(',', 'O'),('where', 'O'),('his', 'O'),('grandfather', 'O'),('had', 'O'),('been', 'O'),('a', 'O'),('general', 'O'),('in', 'O'),('the', 'O'),('Bengal', 'ORGANIZATION'),('Army', 'ORGANIZATION'),('.', 'O')
+_______________________________________
+Sentence 6:
+===========
+However, both Julius and Ethel wanted their children to be brought up in Britain, so they moved to Maida Vale, London, where Alan Turing was born on 23 June 1912, as recorded by a blue plaque on the outside of the house of his birth, later the Colonnade Hotel.
+.......................................
+('However', 'O'),(',', 'O'),('both', 'O'),('Julius', 'PERSON'),('and', 'O'),('Ethel', 'PERSON'),('wanted', 'O'),('their', 'O'),('children', 'O'),('to', 'O'),('be', 'O'),('brought', 'O'),('up', 'O'),('in', 'O'),('Britain', 'LOCATION'),(',', 'O'),('so', 'O'),('they', 'O'),('moved', 'O'),('to', 'O'),('Maida', 'LOCATION'),('Vale', 'LOCATION'),(',', 'O'),('London', 'LOCATION'),(',', 'O'),('where', 'O'),('Alan', 'PERSON'),('Turing', 'PERSON'),('was', 'O'),('born', 'O'),('on', 'O'),('23', 'O'),('June', 'O'),('1912', 'O'),(',', 'O'),('as', 'O'),('recorded', 'O'),('by', 'O'),('a', 'O'),('blue', 'O'),('plaque', 'O'),('on', 'O'),('the', 'O'),('outside', 'O'),('of', 'O'),('the', 'O'),('house', 'O'),('of', 'O'),('his', 'O'),('birth', 'O'),(',', 'O'),('later', 'O'),('the', 'O'),('Colonnade', 'LOCATION'),('Hotel', 'LOCATION'),('.', 'O')
+_______________________________________
+Sentence 7:
+===========
+Turing had an elder brother, John (the father of Sir John Dermot Turing, 12th Baronet of the Turing baronets).
+.......................................
+('Turing', 'O'),('had', 'O'),('an', 'O'),('elder', 'O'),('brother', 'O'),(',', 'O'),('John', 'PERSON'),('(', 'PERSON'),('the', 'O'),('father', 'O'),('of', 'O'),('Sir', 'O'),('John', 'PERSON'),('Dermot', 'PERSON'),('Turing', 'PERSON'),(',', 'O'),('12th', 'O'),('Baronet', 'O'),('of', 'O'),('the', 'O'),('Turing', 'O'),('baronets', 'O'),(')', 'O'),('.', 'O')
+_______________________________________
+Sentence 8:
+===========
+Turing's father's civil service commission was still active and during Turing's childhood years Turing's parents travelled between Hastings in England and India, leaving their two sons to stay with a retired Army couple.
+.......................................
+('Turing', 'PERSON'),("'s", 'O'),('father', 'O'),("'s", 'O'),('civil', 'O'),('service', 'O'),('commission', 'O'),('was', 'O'),('still', 'O'),('active', 'O'),('and', 'O'),('during', 'O'),('Turing', 'PERSON'),("'s", 'O'),('childhood', 'O'),('years', 'O'),('Turing', 'O'),("'s", 'O'),('parents', 'O'),('travelled', 'O'),('between', 'O'),('Hastings', 'LOCATION'),('in', 'O'),('England', 'LOCATION'),('and', 'O'),('India', 'LOCATION'),(',', 'O'),('leaving', 'O'),('their', 'O'),('two', 'O'),('sons', 'O'),('to', 'O'),('stay', 'O'),('with', 'O'),('a', 'O'),('retired', 'O'),('Army', 'ORGANIZATION'),('couple', 'O'),('.', 'O')
+_______________________________________
+Sentence 9:
+===========
+At Hastings, Turing stayed at Baston Lodge, Upper Maze Hill, St Leonards-on-Sea, now marked with a blue plaque.
+.......................................
+('At', 'O'),('Hastings', 'LOCATION'),(',', 'O'),('Turing', 'PERSON'),('stayed', 'O'),('at', 'O'),('Baston', 'LOCATION'),('Lodge', 'LOCATION'),(',', 'O'),('Upper', 'LOCATION'),('Maze', 'LOCATION'),('Hill', 'LOCATION'),(',', 'O'),('St', 'LOCATION'),('Leonards-on-Sea', 'LOCATION'),(',', 'O'),('now', 'O'),('marked', 'O'),('with', 'O'),('a', 'O'),('blue', 'O'),('plaque', 'O'),('.', 'O')
+_______________________________________
+Sentence 10:
+===========
+The plaque was unveiled on 23 June 2012, the centenary of Turing's birth.
+.......................................
+('The', 'O'),('plaque', 'O'),('was', 'O'),('unveiled', 'O'),('on', 'O'),('23', 'O'),('June', 'O'),('2012', 'O'),(',', 'O'),('the', 'O'),('centenary', 'O'),('of', 'O'),('Turing', 'PERSON'),("'s", 'O'),('birth', 'O'),('.', 'O')
+_______________________________________
+Sentence 11:
+===========
+Very early in life, Turing showed signs of the genius that he was later to display prominently.
+.......................................
+('Very', 'O'),('early', 'O'),('in', 'O'),('life', 'O'),(',', 'O'),('Turing', 'PERSON'),('showed', 'O'),('signs', 'O'),('of', 'O'),('the', 'O'),('genius', 'O'),('that', 'O'),('he', 'O'),('was', 'O'),('later', 'O'),('to', 'O'),('display', 'O'),('prominently', 'O'),('.', 'O')
+_______________________________________
+Sentence 12:
+===========
+His parents purchased a house in Guildford in 1927, and Turing lived there during school holidays.
+.......................................
+('His', 'O'),('parents', 'O'),('purchased', 'O'),('a', 'O'),('house', 'O'),('in', 'O'),('Guildford', 'LOCATION'),('in', 'O'),('1927', 'O'),(',', 'O'),('and', 'O'),('Turing', 'PERSON'),('lived', 'O'),('there', 'O'),('during', 'O'),('school', 'O'),('holidays', 'O'),('.', 'O')
+_______________________________________
+Sentence 13:
+===========
+The location is also marked with a blue plaque.
+.......................................
+('The', 'O'),('location', 'O'),('is', 'O'),('also', 'O'),('marked', 'O'),('with', 'O'),('a', 'O'),('blue', 'O'),('plaque', 'O'),('.', 'O')
+_______________________________________
+Sentence 14:
+===========
+Turing's parents enrolled him at St Michael's, a day school at 20 Charles Road, St Leonards-on-Sea, at the age of six.
+.......................................
+('Turing', 'PERSON'),("'s", 'O'),('parents', 'O'),('enrolled', 'O'),('him', 'O'),('at', 'O'),('St', 'ORGANIZATION'),('Michael', 'ORGANIZATION'),("'s", 'O'),(',', 'O'),('a', 'O'),('day', 'O'),('school', 'O'),('at', 'O'),('20', 'O'),('Charles', 'LOCATION'),('Road', 'LOCATION'),(',', 'O'),('St', 'LOCATION'),('Leonards-on-Sea', 'LOCATION'),(',', 'O'),('at', 'O'),('the', 'O'),('age', 'O'),('of', 'O'),('six', 'O'),('.', 'O')
+_______________________________________
+Sentence 15:
+===========
+The headmistress recognised his talent early on, as did many of his subsequent teachers.
+.......................................
+('The', 'O'),('headmistress', 'O'),('recognised', 'O'),('his', 'O'),('talent', 'O'),('early', 'O'),('on', 'O'),(',', 'O'),('as', 'O'),('did', 'O'),('many', 'O'),('of', 'O'),('his', 'O'),('subsequent', 'O'),('teachers', 'O'),('.', 'O')
+_______________________________________
+Sentence 16:
+===========
+Between January 1922 and 1926, Turing was educated at Hazelhurst Preparatory School, an independent school in the village of Frant in Sussex (now East Sussex).
+.......................................
+('Between', 'O'),('January', 'O'),('1922', 'O'),('and', 'O'),('1926', 'O'),(',', 'O'),('Turing', 'PERSON'),('was', 'O'),('educated', 'O'),('at', 'O'),('Hazelhurst', 'ORGANIZATION'),('Preparatory', 'ORGANIZATION'),('School', 'ORGANIZATION'),(',', 'O'),('an', 'O'),('independent', 'O'),('school', 'O'),('in', 'O'),('the', 'O'),('village', 'O'),('of', 'O'),('Frant', 'LOCATION'),('in', 'O'),('Sussex', 'LOCATION'),('(', 'O'),('now', 'O'),('East', 'O'),('Sussex', 'O'),(')', 'O'),('.', 'O')
+_______________________________________
+Sentence 17:
+===========
+In 1926, at the age of 13, he went on to Sherborne School, a boarding independent school in the market town of Sherborne in Dorset.
+.......................................
+('In', 'O'),('1926', 'O'),(',', 'O'),('at', 'O'),('the', 'O'),('age', 'O'),('of', 'O'),('13', 'O'),(',', 'O'),('he', 'O'),('went', 'O'),('on', 'O'),('to', 'O'),('Sherborne', 'ORGANIZATION'),('School', 'ORGANIZATION'),(',', 'O'),('a', 'O'),('boarding', 'O'),('independent', 'O'),('school', 'O'),('in', 'O'),('the', 'O'),('market', 'O'),('town', 'O'),('of', 'O'),('Sherborne', 'LOCATION'),('in', 'O'),('Dorset', 'LOCATION'),('.', 'O')
+_______________________________________
+Sentence 18:
+===========
+The first day of term coincided with the 1926 General Strike in Britain, but he was so determined to attend, that he rode his bicycle unaccompanied 60 miles (97 km) from Southampton to Sherborne, stopping overnight at an inn.
+.......................................
+('The', 'O'),('first', 'O'),('day', 'O'),('of', 'O'),('term', 'O'),('coincided', 'O'),('with', 'O'),('the', 'O'),('1926', 'O'),('General', 'O'),('Strike', 'O'),('in', 'O'),('Britain', 'LOCATION'),(',', 'O'),('but', 'O'),('he', 'O'),('was', 'O'),('so', 'O'),('determined', 'O'),('to', 'O'),('attend', 'O'),(',', 'O'),('that', 'O'),('he', 'O'),('rode', 'O'),('his', 'O'),('bicycle', 'O'),('unaccompanied', 'O'),('60', 'O'),('miles', 'O'),('(', 'O'),('97', 'O'),('km', 'O'),(')', 'O'),('from', 'O'),('Southampton', 'LOCATION'),('to', 'O'),('Sherborne', 'PERSON'),(',', 'O'),('stopping', 'O'),('overnight', 'O'),('at', 'O'),('an', 'O'),('inn', 'O'),('.', 'O')
+_______________________________________
+Sentence 19:
+===========
+Turing's natural inclination towards mathematics and science did not earn him respect from some of the teachers at Sherborne, whose definition of education placed more emphasis on the classics.
+.......................................
+('Turing', 'O'),("'s", 'O'),('natural', 'O'),('inclination', 'O'),('towards', 'O'),('mathematics', 'O'),('and', 'O'),('science', 'O'),('did', 'O'),('not', 'O'),('earn', 'O'),('him', 'O'),('respect', 'O'),('from', 'O'),('some', 'O'),('of', 'O'),('the', 'O'),('teachers', 'O'),('at', 'O'),('Sherborne', 'ORGANIZATION'),(',', 'O'),('whose', 'O'),('definition', 'O'),('of', 'O'),('education', 'O'),('placed', 'O'),('more', 'O'),('emphasis', 'O'),('on', 'O'),('the', 'O'),('classics', 'O'),('.', 'O')
+_______________________________________
+Sentence 20:
+===========
+His headmaster wrote to his parents: "I hope he will not fall between two stools.
+.......................................
+('His', 'O'),('headmaster', 'O'),('wrote', 'O'),('to', 'O'),('his', 'O'),('parents', 'O'),(':', 'O'),('``', 'O'),('I', 'O'),('hope', 'O'),('he', 'O'),('will', 'O'),('not', 'O'),('fall', 'O'),('between', 'O'),('two', 'O'),('stools', 'O'),('.', 'O')
+_______________________________________
+Sentence 21:
+===========
+If he is to stay at public school, he must aim at becoming educated.
+.......................................
+('If', 'O'),('he', 'O'),('is', 'O'),('to', 'O'),('stay', 'O'),('at', 'O'),('public', 'O'),('school', 'O'),(',', 'O'),('he', 'O'),('must', 'O'),('aim', 'O'),('at', 'O'),('becoming', 'O'),('educated', 'O'),('.', 'O')
+_______________________________________
+Sentence 22:
+===========
+If he is to be solely a Scientific Specialist, he is wasting his time at a public school".
+.......................................
+('If', 'O'),('he', 'O'),('is', 'O'),('to', 'O'),('be', 'O'),('solely', 'O'),('a', 'O'),('Scientific', 'O'),('Specialist', 'O'),(',', 'O'),('he', 'O'),('is', 'O'),('wasting', 'O'),('his', 'O'),('time', 'O'),('at', 'O'),('a', 'O'),('public', 'O'),('school', 'O'),("''", 'O'),('.', 'O')
+_______________________________________
+Sentence 23:
+===========
+Despite this, Turing continued to show remarkable ability in the studies he loved, solving advanced problems in 1927 without having studied even elementary calculus.
+.......................................
+('Despite', 'O'),('this', 'O'),(',', 'O'),('Turing', 'PERSON'),('continued', 'O'),('to', 'O'),('show', 'O'),('remarkable', 'O'),('ability', 'O'),('in', 'O'),('the', 'O'),('studies', 'O'),('he', 'O'),('loved', 'O'),(',', 'O'),('solving', 'O'),('advanced', 'O'),('problems', 'O'),('in', 'O'),('1927', 'O'),('without', 'O'),('having', 'O'),('studied', 'O'),('even', 'O'),('elementary', 'O'),('calculus', 'O'),('.', 'O')
+_______________________________________
+Sentence 24:
+===========
+In 1928, aged 16, Turing encountered Albert Einstein's work; not only did he grasp it, but it is possible that he managed to deduce Einstein's questioning of Newton's laws of motion from a text in which this was never made explicit.
+.......................................
+('In', 'O'),('1928', 'O'),(',', 'O'),('aged', 'O'),('16', 'O'),(',', 'O'),('Turing', 'PERSON'),('encountered', 'O'),('Albert', 'PERSON'),('Einstein', 'PERSON'),("'s", 'O'),('work', 'O'),(';', 'O'),('not', 'O'),('only', 'O'),('did', 'O'),('he', 'O'),('grasp', 'O'),('it', 'O'),(',', 'O'),('but', 'O'),('it', 'O'),('is', 'O'),('possible', 'O'),('that', 'O'),('he', 'O'),('managed', 'O'),('to', 'O'),('deduce', 'O'),('Einstein', 'PERSON'),("'s", 'O'),('questioning', 'O'),('of', 'O'),('Newton', 'PERSON'),("'s", 'O'),('laws', 'O'),('of', 'O'),('motion', 'O'),('from', 'O'),('a', 'O'),('text', 'O'),('in', 'O'),('which', 'O'),('this', 'O'),('was', 'O'),('never', 'O'),('made', 'O'),('explicit', 'O'),('.', 'O')
+_______________________________________
