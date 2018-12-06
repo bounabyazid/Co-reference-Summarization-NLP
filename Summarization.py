@@ -26,11 +26,12 @@ from collections import Counter
 
 stopwords = stopwords.words('english')
 wordcount = {}
+PosList = []
 
 #_______________________________________________________________
 
-def TextFile_To_Sentences():
-    with open('Alan Turing.txt') as f:
+def TextFile_To_Sentences(TextFile):
+    with open(TextFile, encoding="utf8") as f:
          text = f.read()
     sentences = sent_tokenize(text)
     return sentences
@@ -76,9 +77,18 @@ def Text_tokenize(Text):
 
 def Tagging(Text):
     Tagged_Text = pos_tag(Text_tokenize(Text))
-    print (type(Tagged_Text))
     return Tagged_Text
+#_______________________________________________________________
 
+def NE_Tagger(Text):
+    st = StanfordNERTagger('/home/polo/Downloads/stanford-ner-2018-02-27/classifiers/english.all.3class.distsim.crf.ser.gz',
+					       '/home/polo/Downloads/stanford-ner-2018-02-27/stanford-ner.jar', encoding='utf-8')
+
+    tokenized_text = word_tokenize(Text)
+    classified_text = st.tag(tokenized_text)
+
+    #print(classified_text)
+    return classified_text
 #_______________________________________________________________
     
 def find_proper_nouns(Tagged_Text):
@@ -102,29 +112,45 @@ def summarize_text(proper_nouns, top_num):
 
 #_______________________________________________________________
     
-def MainCharacter(Text):
+def MainCharacter(Text,n_print):
+    NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
+    NER_Text = dict(NER_Text)
     
-    return 0
+    word_counter = collections.Counter(wordcount)
+
+    return max(word_counter, key=word_counter.get)
 
 #_______________________________________________________________
 
-def SentsMainChar(sentences):
-    return sentences
+def SentsMainChar(sentences,MainChar):
+    #but do the SRL before get sentences that contains the main Char
+    MainSents = []
+    for sent in sentences:
+        if MainChar in sent:
+           MainSents.append(sent)
+    return MainSents
 
 #_______________________________________________________________
 
 def MostCommon(n_print,Tagged_Text):
-    Tagged_Text = dict(Tagged_Text)
-    print (Tagged_Text)
-    #Pos = []
+    #Tagged_Text = [(x.lower(), y) for x,y in Tagged_Text]
+    #PosList = set([X[1] for X in Tagged_Text])
+    #print (PosList)
+    #print (Tagged_Text)
+    #Tagged_Text = dict(Tagged_Text)
+
+    NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
+    NER_Text = dict(NER_Text)
+    print (NER_Text)
+    
     print("\nOK. The {} most common words are as follows\n".format(n_print))
     word_counter = collections.Counter(wordcount)
-    print(word_counter)
+    #print(word_counter)
     for word, count in word_counter.most_common(n_print):
-        
-        print(word, ": ", count, ": ",Tagged_Text[word])
-        #Pos.append(Tagged_Text[word])
+        #print(word, ": ", count, ": ",Tagged_Text[word])
+        print(word, ": ", count, ": ",NER_Text[word])
     
+    print('yazid and abhinay ',max(word_counter, key=word_counter.get))
         
 #_______________________________________________________________
 
@@ -146,7 +172,11 @@ DrawMostCommon(n_print)
 print('____________________________________________________')
 
 Tagged_Text = Tagging(Text)
-MostCommon(n_print,Tagged_Text)
+#MostCommon(n_print,Tagged_Text)
+MainChar = MainCharacter(Text,n_print)
 
-proper_nouns = find_proper_nouns(Tagged_Text)
-print (summarize_text(proper_nouns, 10))
+sentences = TextFile_To_Sentences('Alan Turing.txt')
+
+print ("\n".join(SentsMainChar(sentences,MainChar)))
+#proper_nouns = find_proper_nouns(Tagged_Text)
+#print (summarize_text(proper_nouns, 10))
