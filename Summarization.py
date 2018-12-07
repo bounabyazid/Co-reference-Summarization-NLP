@@ -117,8 +117,9 @@ def MainCharacter(Text,n_print):
     NER_Text = dict(NER_Text)
     
     word_counter = collections.Counter(wordcount)
-
-    return max(word_counter, key=word_counter.get)
+    MainChar = max(word_counter, key=word_counter.get)
+    print('Main Character :',MainChar)
+    return MainChar
 
 #_______________________________________________________________
 
@@ -126,13 +127,14 @@ def SentsMainChar(sentences,MainChar):
     #but do the SRL before get sentences that contains the main Char
     MainSents = []
     for sent in sentences:
-        if MainChar in sent:
+        if MainChar in sent.lower():
            MainSents.append(sent)
     return MainSents
 
 #_______________________________________________________________
 
-def MostCommon(n_print,Tagged_Text):
+def MostCommon(n_print,Text):
+    #Tagged_Text = Tagging(Text)
     #Tagged_Text = [(x.lower(), y) for x,y in Tagged_Text]
     #PosList = set([X[1] for X in Tagged_Text])
     #print (PosList)
@@ -150,7 +152,8 @@ def MostCommon(n_print,Tagged_Text):
         #print(word, ": ", count, ": ",Tagged_Text[word])
         print(word, ": ", count, ": ",NER_Text[word])
     
-    print('yazid and abhinay ',max(word_counter, key=word_counter.get))
+    print('Most Common Term ',max(word_counter, key=word_counter.get))
+    
         
 #_______________________________________________________________
 
@@ -171,12 +174,16 @@ DrawMostCommon(n_print)
 
 print('____________________________________________________')
 
-Tagged_Text = Tagging(Text)
+
 #MostCommon(n_print,Tagged_Text)
 MainChar = MainCharacter(Text,n_print)
 
 sentences = TextFile_To_Sentences('Alan Turing.txt')
-
-print ("\n".join(SentsMainChar(sentences,MainChar)))
+#print ("\n".join(sentences))
+print('____________________________________________________')
+MainSents = SentsMainChar(sentences,MainChar)
+print ("\n".join(MainSents))
+print('____________________________________________________')
+print('Number of Sentences Containing Main Character ',MainChar,' = ', len(MainSents))
 #proper_nouns = find_proper_nouns(Tagged_Text)
 #print (summarize_text(proper_nouns, 10))
