@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Dec 12 23:18:51 2018
-
-@author: polo
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Sun Nov 25 15:54:22 2018
 
 @author: Yazid Bounab
@@ -22,6 +14,8 @@ import json
 
 from nltk.tree import Tree
 from stanfordcorenlp import StanfordCoreNLP
+
+from nltk.tag import StanfordNERTagger
 
 from nltk import word_tokenize, pos_tag, ne_chunk
 from nltk import RegexpParser
@@ -55,6 +49,46 @@ CorNP1 = 'The project leader is refusing to help. The jerk thinks only of himsel
 CorNP2 = 'Some of our colleagues are going to be supportive. These kinds of people will earn our gratitude'
 # Coreferring noun phrases, whereby the second noun phrase is a predication over the first.
 
+#_______________________________________________________________
+
+def NE_Tagger(text):
+    st = StanfordNERTagger('/home/polo/Downloads/stanford-ner-2018-02-27/classifiers/english.all.3class.distsim.crf.ser.gz',
+					       '/home/polo/Downloads/stanford-ner-2018-02-27/stanford-ner.jar', encoding='utf-8')
+
+    tokenized_text = word_tokenize(text)
+    classified_text = st.tag(tokenized_text)
+
+    return classified_text
+#_______________________________________________________________
+
+def NER_POS_TYPE(File,Type,Sent):
+    File.write(Type+"=" * len(Type)+'\n'+Sent)
+    File.write('\n...................NER....................\n')
+    File.write(','.join(str(e) for e in NE_Tagger(Sent)))
+    File.write('\n...................POS....................\n')
+    File.write(','.join(str(e) for e in nltk.pos_tag(nltk.word_tokenize(Sent))))
+    File.write('\n_______________________________________\n')
+    
+#_______________________________________________________________
+    
+def NER_COREF_SAMPLES():
+    File = open('NER_COREF_SAMPLES.txt','w')
+   
+    NER_POS_TYPE(File,'Anaphora 1:\n',Ana1)
+    NER_POS_TYPE(File,'Anaphora 2:\n',Ana2)
+    
+    NER_POS_TYPE(File,'Cataphora 1:\n',Cata1)
+    NER_POS_TYPE(File,'Cataphora 2:\n',Cata2)
+    
+    NER_POS_TYPE(File,'Split antecedents 1:\n',SAnt1)
+    NER_POS_TYPE(File,'Split antecedents 2:\n',SAnt2)
+    
+    NER_POS_TYPE(File,'Coreferring noun phrases 1:\n',CorNP1)
+    NER_POS_TYPE(File,'Coreferring noun phrases 2:\n',CorNP2)
+    
+    print ('End NER Samples Coref')
+
+    File.close()
 
 # Defining a grammar & Parser
 NP = "NP: {(<V\w+>|<NN\w?>)+.*<NN\w?>}"
@@ -97,22 +131,22 @@ def draw():
     result = NPChunker.parse(sentence)
     result.draw()
 
-def Find_Split_Antecedents(mentions, Tmention):
-    SAmention = []
+def Find_Split_Antecedents(corenlp_output, Tmention):
     text = ''
-    for j in range(1, len(mentions)):
-        Rmention = mentions[j]
-        if Rmention['type'] != 'PRONOMINAL' and Rmention['number'] != 'PLURAL':# and Rmention['gender']=='':
-           SAmention.append(Rmention)
-           if text == '':
-               text = Rmention['text']
-           else:
-               text += ' and '+Rmention['text']
-
-    print ('\n'.join(map(str, SAmention)))
-    print ('polo', text)
-
-    return text,SAmention
+    for coref in corenlp_output['corefs']:
+        mentions = corenlp_output['corefs'][coref]
+        for Rmention in mentions:
+            #print (Rmention,'\n')
+            #if (Rmention['type'] == 'NOMINAL' or 'PROPER') and Rmention['number'] != 'PLURAL':# and Rmention['gender']=='':
+            if Rmention['type'] == 'PROPER' and Rmention['number'] != 'PLURAL':# and Rmention['gender']=='':
+               if text == '':
+                  text = Rmention['text']
+               else:
+                   if not Rmention['text'] in text:
+                       text += ' and '+Rmention['text']
+#    if text == :
+        
+    return text
 
 def resolve(corenlp_output):
     for coref in corenlp_output['corefs']:
@@ -120,10 +154,9 @@ def resolve(corenlp_output):
         #print ('\n............\n'.join(map(str, mentions)))
         #a.remove('b')
         #____________________Anaphora____________________
-        for j in range(1, len(mentions)):
-            mention = mentions[j]
+        for mention in mentions:
             if mention['type'] == 'PRONOMINAL':
-               #print (mention)
+               #print (mention,'\n')
                target_sentence = mention['sentNum']
                target_token = mention['startIndex'] - 1 
 
@@ -131,8 +164,7 @@ def resolve(corenlp_output):
                   antecedent = mentions[0] 
                   corenlp_output['sentences'][target_sentence - 1]['tokens'][target_token]['word'] = antecedent['text']
                if mention['number'] == 'PLURAL':
-                  text,SAmention = Find_Split_Antecedents(mentions, mention)
-                  #print ('polo', text)
+                  text = Find_Split_Antecedents(corenlp_output, mention)
                   corenlp_output['sentences'][target_sentence - 1]['tokens'][target_token]['word'] = text
         #___________________Cataphora____________________
         #_______________Split_antecedents________________
@@ -163,10 +195,12 @@ def test(text):
 
     print('Original:', text)
     print('_________________________________________')
-    #print('Resolved: ', end='')
-    #print_resolved(output)
+    print('Resolved: ', end='')
+    print_resolved(output)
     #draw()
     nlp.close() 
+
+NER_COREF_SAMPLES()
 
 #text = 'Barack Obama was born in Hawaii.  He is the president. Obama was elected in 2008.'
 #test(text)
@@ -177,7 +211,7 @@ def test(text):
 #test(Cata1)
 #test(Cata2)
 
-test(SAnt1)
+#test(SAnt1)
 #test(SAnt2)
 
 #test(CorNP1)
