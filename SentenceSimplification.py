@@ -35,13 +35,24 @@ def Read_Text():
 
 # Defining a grammar & Parser
 NP = "NP: {(<V\w+>|<NN\w?>)+.*<NN\w?>}"
-RC = "RC: {(who|whom|which|whose)<VBD>}"
+RC = "RC: {(who|whom|which|whosethat)<VBD>}"
 RC = "RC: {<WP><VBD>}"
 
+VB = "VB:{<VB.*><DT><NN.*>}"
 pattern = """NP: {<DT>?<JJ>*<NN>}
                 VBD: {<VBD>}
                 IN: {<IN>}
-                RC : {<S><NP> <VP>}"""
+                RC : {<S><NP> <VP>}
+                ADVC : {\w+ly}
+                
+                """
+#https://towardsdatascience.com/a-practitioners-guide-to-natural-language-processing-part-i-processing-understanding-text-9f4abfd13e72                
+pattern = """NP: {<DT>?<JJ>*<NN>}
+             VP: {<VB.*><DT><NN.*>}
+             ADJP : {}
+             ADVP : {<RB.*><VB.*|JJ.*|NN.*>}
+             PP : {}
+             """
                 
 chunker = RegexpParser(NP)
 
