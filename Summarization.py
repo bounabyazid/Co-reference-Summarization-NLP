@@ -21,6 +21,7 @@ import pandas as pd
 
 from collections import Counter
 
+#https://summari.es/
 #https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
 #https://medium.com/agatha-codes/using-textual-analysis-to-quantify-a-cast-of-characters-4f3baecdb5c
 
@@ -143,7 +144,7 @@ def MostCommon(n_print,Text):
 
     NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
     NER_Text = dict(NER_Text)
-    print (NER_Text)
+    #print (NER_Text)
     
     print("\nOK. The {} most common words are as follows\n".format(n_print))
     word_counter = collections.Counter(wordcount)
@@ -165,25 +166,64 @@ def DrawMostCommon(n_print):
 
 #_______________________________________________________________
     
-Text,punct = Read_TextFile('Alan Turing.txt')
-Precessed_Text = Preprocessing_Text(Text,punct)
+def Simplified_Sentence(Sentence):
+    Simple_Sent = ''
+    #_____________________parentheticals________________________
+    if Sentence.find('(') != -1 and Sentence.find(')') != -1:
+       t = Sentence[Sentence.find('('):Sentence.find(')')+1]  # maintenant t pointe vers la nouvelle chaîne &#39;ll&#39;
+       Simple_Sent = Sentence.replace(t,'')
+       #print(Sentence.replace(t,''))
+    #Relative_Clause(Sentence)
+    #non-restrictive
+    #restrictive appositive phrases 
+    #participial phrases offset by commas 
 
-Term_Frequecy(Precessed_Text,punct)
-n_print = int(input("How many most common words to print: "))
-DrawMostCommon(n_print)
+    #adjective and adverb phrases delimited by punctuation 
+    #particular prepositional phrases 
+    #lead noun phrases 
+    #intra-sentential attributions 
+    #___________________________________________________________
+    return Simple_Sent
+#_______________________________________________________________
 
-print('____________________________________________________')
+def Simplified_Sentences(Sentences):
+    Simple_Sents = []
+    for Sentence in Sentences:
+        #print (Sentence)
+        Simple_Sents.append(Simplified_Sentence(Sentence))
+    return Simple_Sents
 
+#_______________________________________________________________
 
-#MostCommon(n_print,Tagged_Text)
-MainChar = MainCharacter(Text,n_print)
+def Summarize_Story():
+    Text,punct = Read_TextFile('Alan Turing.txt')
+    Precessed_Text = Preprocessing_Text(Text,punct)
 
-sentences = TextFile_To_Sentences('Alan Turing.txt')
-#print ("\n".join(sentences))
-print('____________________________________________________')
-MainSents = SentsMainChar(sentences,MainChar)
-print ("\n".join(MainSents))
-print('____________________________________________________')
-print('Number of Sentences Containing Main Character ',MainChar,' = ', len(MainSents))
-#proper_nouns = find_proper_nouns(Tagged_Text)
-#print (summarize_text(proper_nouns, 10))
+    Term_Frequecy(Precessed_Text,punct)
+    n_print = int(input("How many most common words to print: "))
+    DrawMostCommon(n_print)
+
+    print('____________________________________________________')
+
+    MostCommon(n_print,Text)
+    MainChar = MainCharacter(Text,n_print)
+
+    sentences = TextFile_To_Sentences('Alan Turing.txt')
+    #print ("\n".join(sentences))
+    print('____________________________________________________')
+    MainSents = Simplified_Sentences(SentsMainChar(sentences,MainChar))
+    print ("\n.............\n".join(MainSents))
+    print('____________________________________________________')
+    print('Number of Sentences Containing Main Character ',MainChar,' = ', len(MainSents))
+    #proper_nouns = find_proper_nouns(Tagged_Text)
+    #print (summarize_text(proper_nouns, 10))
+    print('____________________________________________________')
+#_______________________________________________________________
+
+#def Summerize_Multi_Docs():
+    
+
+#_______________________________________________________________
+
+Summarize_Story()
+
