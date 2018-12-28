@@ -74,7 +74,7 @@ def get_continuous_chunks(text, chunk_func=ne_chunk):
             continue
 
     return continuous_chunk
-
+#https://academicguides.waldenu.edu/formandstyle/writing/grammarmechanics/clauses
 def Relative_Clause(sentence):
     #words = nltk.word_tokenize(sentence)
     #tagged = nltk.pos_tag(words)
