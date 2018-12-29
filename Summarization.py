@@ -6,6 +6,10 @@ Created on Mon Dec  3 16:05:59 2018
 @author: Bounab Yazid
 """
 import re
+import os
+import json
+from os import listdir
+from os.path import isfile, join
 
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
@@ -59,8 +63,47 @@ def Preprocessing_Text(Text,punct):
     #Text = Text.lower()
     #print (Text)
     return Text
+
+#______________________________________________________________
+#https://summari.es/download/
+def Read_JsonFile():
+    path = '/home/polo/.config/spyder-py3/Co-referece/thin/test-shell.json'
+    #json_data = open(path)
+    #data = json.load(json_data)
+    data = []
+    with open(path) as f:
+        for line in f:
+            data.append(json.loads(line))
+            break
+    print (data)
+
 #_______________________________________________________________
 
+def Read_BBC_News_Summary():
+    News_Articles = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/News Articles'
+    Summaries = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Summaries'
+    Machine_Summary = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Machine Summary'
+    
+    SubDirectories = os.listdir(News_Articles)
+    
+    try:  
+        os.mkdir(Machine_Summary)
+    except OSError:  
+                print ("Creation of the directory %s failed" % Machine_Summary)
+    for subdir in os.listdir(News_Articles):
+        try:  
+            os.mkdir(Machine_Summary+'/'+subdir)
+        except OSError:  
+                print ("Creation of the directory %s failed" % subdir)
+
+    print (SubDirectories)
+    
+    n_print = int(input("How many most common words to print: "))
+    
+    for subdir in SubDirectories:
+        onlyfiles = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
+        #print(onlyfiles)
+#_______________________________________________________________
 def Term_Frequecy(Text,punct):
     Text = Preprocessing_Text(Text,punct)
     for word in Text.lower().split():
@@ -165,7 +208,7 @@ def DrawMostCommon(n_print):
     df.plot.bar(x='Word',y='Count')
 
 #_______________________________________________________________
-    
+
 def Simplified_Sentence(Sentence):
     Simple_Sent = ''
     #_____________________parentheticals________________________
@@ -220,10 +263,45 @@ def Summarize_Story():
     print('____________________________________________________')
 #_______________________________________________________________
 
-#def Summerize_Multi_Docs():
+def Summarize_Story(filename,n_print):
+    Text,punct = Read_TextFile(filename)
+    Precessed_Text = Preprocessing_Text(Text,punct)
+
+    Term_Frequecy(Precessed_Text,punct)
+    #DrawMostCommon(n_print)
+    #MostCommon(n_print,Text)
     
+    MainChar = MainCharacter(Text,n_print)
+
+    sentences = TextFile_To_Sentences('Alan Turing.txt')
+    MainSents = Simplified_Sentences(SentsMainChar(sentences,MainChar))
+
+    print (MainSents)
 
 #_______________________________________________________________
+#https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
+def Summary_Evaluation():
+    Time_read_original = 1
+    Time_read_summary = 1
+    Time_saved = Time_read_original/Time_read_summary
+    
+    MainSentences = 1
+    TotalSentencesSummarized = 1
+    TotalSentences = 1
+    
+    Precision = MainSentences/TotalSentencesSummarized
+    Recall = MainSentences/TotalSentences
+    
+    Bleu = 1
+    Rouge = 1
+    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
+    
+    Total_words_summary = 1
+    Total_words_original = 1
+    Compressed_Rate = Total_words_summary / Total_words_original
+#_______________________________________________________________
+#Summarize_Story()
+#Read_BBC_News_Summary()
+#Read_JsonFile()
 
-Summarize_Story()
-
+Summarize_Story('Alan Turing.txt',10)
