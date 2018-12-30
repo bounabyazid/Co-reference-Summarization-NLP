@@ -101,8 +101,15 @@ def Read_BBC_News_Summary():
     n_print = int(input("How many most common words to print: "))
     
     for subdir in SubDirectories:
-        onlyfiles = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
-        #print(onlyfiles)
+        files = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
+        for f in files:
+            print(News_Articles+'/'+subdir+'/'+f)
+            MainSents = Summarize_Story(News_Articles+'/'+subdir+'/'+f,n_print)
+            with open(Machine_Summary+'/'+subdir+'/'+f, "w") as output:
+                 output.write("".join(MainSents))
+            
+        print('____________________________________________________')
+
 #_______________________________________________________________
 def Term_Frequecy(Text,punct):
     Text = Preprocessing_Text(Text,punct)
@@ -162,7 +169,7 @@ def MainCharacter(Text,n_print):
     
     word_counter = collections.Counter(wordcount)
     MainChar = max(word_counter, key=word_counter.get)
-    print('Main Character :',MainChar)
+    #print('Main Character :',MainChar)
     return MainChar
 
 #_______________________________________________________________
@@ -210,11 +217,14 @@ def DrawMostCommon(n_print):
 #_______________________________________________________________
 
 def Simplified_Sentence(Sentence):
-    Simple_Sent = ''
+    Simple_Sent = Sentence
     #_____________________parentheticals________________________
-    if Sentence.find('(') != -1 and Sentence.find(')') != -1:
-       t = Sentence[Sentence.find('('):Sentence.find(')')+1]  # maintenant t pointe vers la nouvelle chaîne &#39;ll&#39;
-       Simple_Sent = Sentence.replace(t,'')
+    n = Sentence.count('(')
+    while n>0:
+         n -= 1
+         if Simple_Sent.find('(') != -1 and Simple_Sent.find(')') != -1:
+            t = Simple_Sent[Simple_Sent.find('('):Simple_Sent.find(')')+1]  # maintenant t pointe vers la nouvelle chaîne &#39;ll&#39;
+            Simple_Sent = Simple_Sent.replace(t,'')
        #print(Sentence.replace(t,''))
     #Relative_Clause(Sentence)
     #non-restrictive
@@ -233,12 +243,13 @@ def Simplified_Sentences(Sentences):
     Simple_Sents = []
     for Sentence in Sentences:
         #print (Sentence)
-        Simple_Sents.append(Simplified_Sentence(Sentence))
+        Simplifed_Sent = Simplified_Sentence(Sentence)
+        Simple_Sents.append(Simplifed_Sent)
     return Simple_Sents
 
 #_______________________________________________________________
 
-def Summarize_Story():
+def Summarize_Story0():
     Text,punct = Read_TextFile('Alan Turing.txt')
     Precessed_Text = Preprocessing_Text(Text,punct)
 
@@ -261,6 +272,9 @@ def Summarize_Story():
     #proper_nouns = find_proper_nouns(Tagged_Text)
     #print (summarize_text(proper_nouns, 10))
     print('____________________________________________________')
+    with open("MSummary Alan Turing.txt", "w") as output:
+         output.write("".join(MainSents))
+
 #_______________________________________________________________
 
 def Summarize_Story(filename,n_print):
@@ -268,16 +282,15 @@ def Summarize_Story(filename,n_print):
     Precessed_Text = Preprocessing_Text(Text,punct)
 
     Term_Frequecy(Precessed_Text,punct)
-    #DrawMostCommon(n_print)
-    #MostCommon(n_print,Text)
     
     MainChar = MainCharacter(Text,n_print)
 
-    sentences = TextFile_To_Sentences('Alan Turing.txt')
-    MainSents = Simplified_Sentences(SentsMainChar(sentences,MainChar))
-
-    print (MainSents)
-
+    sentences = TextFile_To_Sentences(filename)
+    MainSents = SentsMainChar(sentences,MainChar)
+    MainSents = Simplified_Sentences(MainSents)
+    
+    return MainSents
+    
 #_______________________________________________________________
 #https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
 def Summary_Evaluation():
@@ -299,9 +312,28 @@ def Summary_Evaluation():
     Total_words_summary = 1
     Total_words_original = 1
     Compressed_Rate = Total_words_summary / Total_words_original
+
+def Summary_Evaluation(MSummary,RSummary):
+    overlapping_ngrams    
+    MainSentences = 1
+    TotalSentencesSummarized = 1
+    TotalSentences = 1
+    
+    Precision = MainSentences/TotalSentencesSummarized
+    Recall = MainSentences/TotalSentences
+    
+    Bleu = 1
+    Rouge = 1
+    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
+    
+    Total_words_summary = 1
+    Total_words_original = 1
+    Compressed_Rate = Total_words_summary / Total_words_original
 #_______________________________________________________________
 #Summarize_Story()
-#Read_BBC_News_Summary()
-#Read_JsonFile()
+Read_BBC_News_Summary()
 
-Summarize_Story('Alan Turing.txt',10)
+#Summarize_Story0()
+    
+#Sentence = 'Alan Turing was born in Maida Vale, London, while his father, Julius Mathison Turing , was on leave from his position with the Indian Civil Service (ICS) at Chatrapur, then in the Madras Presidency and presently in Odisha state, in British India.'
+#print (Simplified_Sentence(Sentence))
