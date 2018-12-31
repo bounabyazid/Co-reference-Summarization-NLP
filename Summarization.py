@@ -219,12 +219,9 @@ def DrawMostCommon(n_print):
 def Simplified_Sentence(Sentence):
     Simple_Sent = Sentence
     #_____________________parentheticals________________________
-    n = Sentence.count('(')
-    while n>0:
-         n -= 1
-         if Simple_Sent.find('(') != -1 and Simple_Sent.find(')') != -1:
-            t = Simple_Sent[Simple_Sent.find('('):Simple_Sent.find(')')+1]  # maintenant t pointe vers la nouvelle chaîne &#39;ll&#39;
-            Simple_Sent = Simple_Sent.replace(t,'')
+    Simple_Sent = re.sub('".*?"', '', Simple_Sent) # remove  "...."
+    Simple_Sent = re.sub('\(.*?\)', '', Simple_Sent) # remove (...)
+	
        #print(Sentence.replace(t,''))
     #Relative_Clause(Sentence)
     #non-restrictive
