@@ -13,62 +13,42 @@ from Summarization import Summarize_Story
 
 #_______________________________________________________________
 
-# cumulative BLEU scores
-def BLEUSCORES():
-    reference = [['this', 'is', 'small', 'test']]
-    candidate = ['this', 'is', 'a', 'test']
-    print('Cumulative 1-gram: %f' % sentence_bleu(reference, candidate, weights=(1, 0, 0, 0)))
-    print('Cumulative 2-gram: %f' % sentence_bleu(reference, candidate, weights=(0.5, 0.5, 0, 0)))
-    print('Cumulative 3-gram: %f' % sentence_bleu(reference, candidate, weights=(0.33, 0.33, 0.33, 0)))
-    print('Cumulative 4-gram: %f' % sentence_bleu(reference, candidate, weights=(0.25, 0.25, 0.25, 0.25)))
+#https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
+#https://machinelearningmastery.com/calculate-bleu-score-for-text-python/
+
 #_______________________________________________________________
 
-#https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
-def Rouge(MSummary, RefSummary):
+def Rouge1(MSummary, RefSummary):
         
-    with open(MSummary, encoding="utf8") as f:
-         Text1 = f.read()
-         f.close()
-         
-    with open(RefSummary, encoding="utf8") as f:
-         Text2 = f.read()
-         f.close()
     #Text1 = 'the cat was found under the bed'
     #Text2 = 'the cat was under the bed'
-    OverlapWords = 0
-    for w in Text1.split():
-        if w in Text2.split():
-           OverlapWords += 1
-           
-    Recall = OverlapWords/len(Text2.split())
-    Precision = OverlapWords/len(Text1.split())
     
-    #Bleu = sentence_bleu(Text2.split(), Text1.split(), weights=(1, 0, 0, 0))
-    #F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
+    OverlapWords = len([w for w in MSummary.split() if w in RefSummary.split()])
+       
+    Recall = OverlapWords/len(RefSummary.split())
+    Precision = OverlapWords/len(MSummary.split())
+    
+    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights=(1, 0, 0, 0))
 
-    #print ('Bleu = ',Bleu)
+    #F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
+    F1 = 2*(Precision*Recall/Precision+ Recall)
+    
+    print ('Bleu1 = ',Bleu)
     print ('R1_Recall = ',Recall)
     print ('R1_Precision = ',Precision)
-    #print ('F1 = ',F1)
+    print ('F1 = ',F1)
 
+#_______________________________________________________________
     
-def Rouge2(MSummary, RefSummary):
-    with open(MSummary, encoding="utf8") as f:
-         Text1 = f.read()
-         f.close()
-         
-    with open(RefSummary, encoding="utf8") as f:
-         Text2 = f.read()
-         f.close()
-         
+def Rouge2(MSummary, RefSummary):  
     #Text1 = 'the cat was found under the bed'
     #Text2 = 'the cat was under the bed'
     
-    tokens1 = word_tokenize(Text1)
+    tokens1 = word_tokenize(MSummary)
     bigrms1 = nltk.bigrams(tokens1)
     bigrms1 = list(ngrams(tokens1,2))
 
-    tokens2 = word_tokenize(Text2)
+    tokens2 = word_tokenize(RefSummary)
     bigrms2 = list(nltk.bigrams(tokens2))
 
     #print(*map(' '.join, bigrms1), sep=', ')
@@ -78,58 +58,47 @@ def Rouge2(MSummary, RefSummary):
     
     Recall = OverlapBigrams/len(bigrms2)
     Precision = OverlapBigrams/len(bigrms1)
-     
+    
+    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights=(0, 1, 0, 0))
+    F2 = (1+pow(1,2))*(Precision*Recall/(pow(1,2)*Precision)+ Recall)
+
+    print ('Bleu2 = ',Bleu)
     print ('R2_Recall = ',Recall)
     print ('R2_Precision = ',Precision)
+    print ('F2 = ',F2)
+
 #_______________________________________________________________
-#https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
-def Summary_Evaluation():
-    Time_read_original = 1
-    Time_read_summary = 1
-    Time_saved = Time_read_original/Time_read_summary
+
+def Summary_Evaluation(MSummary,RefSummary,OriginalDoc):
+    with open(MSummary, encoding="utf8") as f:
+         Text1 = f.read()
+         f.close()
+         
+    with open(RefSummary, encoding="utf8") as f:
+         Text2 = f.read()
+         f.close()
     
-    MainSentences = 1
-    TotalSentencesSummarized = 1
-    TotalSentences = 1
+    with open(OriginalDoc, encoding="utf8") as f:
+         Text3 = f.read()
+         f.close()
+         
+    Rouge1(Text1, Text2)
+    print ('_____________________________')
+    Rouge2(Text1, Text2)
+    print ('_____________________________')
     
-    Precision = MainSentences/TotalSentencesSummarized
-    Recall = MainSentences/TotalSentences
-    
-    Bleu = 1
-    Rouge = 1
-    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
-    
-    Total_words_summary = 1
-    Total_words_original = 1
+    Total_words_summary = len(Text1.split())
+    Total_words_original = len(Text3.split())
     Compressed_Rate = Total_words_summary / Total_words_original
+    
+    print ('Compressed Rate = ',Compressed_Rate)
 
-def Summary_Evaluation(MSummary,RSummary):
-    overlapping_ngrams    
-    MainSentences = 1
-    TotalSentencesSummarized = 1
-    TotalSentences = 1
-    
-    Precision = MainSentences/TotalSentencesSummarized
-    Recall = MainSentences/TotalSentences
-    
-    Bleu = 1
-    Rouge = 1
-    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
-    
-    Total_words_summary = 1
-    Total_words_original = 1
-    Compressed_Rate = Total_words_summary / Total_words_original    
 #_______________________________________________________________
 
-News_Articles = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/News Articles'
+News_Articles = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/News Articles/business'
 Summaries = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Summaries/business'
 Machine_Summary = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Machine Summary/business'
-
-#MainSents = Summarize_Story(News_Articles+'/business/001.txt',10)
-#with open(Machine_Summary+'/001.txt', "w") as output:
-#     output.write("".join(MainSents))
-     
+ 
 #_______________________________________________________________
 
-Rouge(Machine_Summary+'/001.txt', Summaries+'/001.txt')
-Rouge2(Machine_Summary+'/001.txt', Summaries+'/001.txt')
+Summary_Evaluation(Machine_Summary+'/001.txt', Summaries+'/001.txt',News_Articles+'/001.txt')
