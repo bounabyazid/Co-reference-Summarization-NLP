@@ -43,7 +43,7 @@ def TextFile_To_Sentences(TextFile):
 #_______________________________________________________________
 
 def Read_TextFile(TextFile):
-    with open(TextFile, encoding="utf8") as f:
+    with open(TextFile, encoding="ISO-8859-1") as f:
          Text = f.read()
          f.close()
     punct = re.sub('[A-Za-z]|[0-9]|[\n\t]','',Text)
