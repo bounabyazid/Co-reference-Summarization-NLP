@@ -11,11 +11,38 @@ from nltk.tokenize import word_tokenize
 from nltk.translate.bleu_score import sentence_bleu
 from Summarization import Summarize_Story
 
-#_______________________________________________________________
 
 #https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
 #https://machinelearningmastery.com/calculate-bleu-score-for-text-python/
 
+#_______________________________________________________________
+
+def Rouge_N(N,MSummary, RefSummary):
+        
+    tokens1 = word_tokenize(MSummary)
+    Ngrams1 = list(ngrams(tokens1,N))
+
+    tokens2 = word_tokenize(RefSummary)
+    Ngrams2 = list(ngrams(tokens2,N))
+    
+    OverlapNgram = len([Ngram for Ngram in Ngrams1 if Ngram in Ngrams2])
+       
+    Recall = OverlapNgram/len(Ngrams2)
+    Precision = OverlapNgram/len(Ngrams1)
+    F = (1+pow(N,2))*(Precision*Recall/(pow(N,2)*Precision)+ Recall)
+
+    weights = [0] * 4
+    weights[N-1] = 1
+    weights = tuple(weights)
+    print (weights)
+    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights)
+
+    
+    print ('Bleu'+str(N)+' = ',Bleu)
+    print ('R'+str(N)+'_Recall = ',Recall)
+    print ('R'+str(N)+'_Precision = ',Precision)
+    print ('F'+str(N)+' = ',F)
+        
 #_______________________________________________________________
 
 def Rouge1(MSummary, RefSummary):
