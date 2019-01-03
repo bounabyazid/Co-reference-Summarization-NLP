@@ -36,7 +36,7 @@ PosList = []
 #_______________________________________________________________
 
 def TextFile_To_Sentences(TextFile):
-    with open(TextFile, encoding="utf8") as f:
+    with open(TextFile, encoding="ISO-8859-1") as f:
          text = f.read()
     sentences = sent_tokenize(text)
     return sentences
@@ -46,6 +46,7 @@ def Read_TextFile(TextFile):
     with open(TextFile, encoding="ISO-8859-1") as f:
          Text = f.read()
          f.close()
+    #print (Text)
     punct = re.sub('[A-Za-z]|[0-9]|[\n\t]','',Text)
     SymbList = list(dict.fromkeys(punct).keys())
     #print (SymbList)
@@ -221,8 +222,7 @@ def Simplified_Sentence(Sentence):
     #_____________________parentheticals________________________
     Simple_Sent = re.sub('".*?"', '', Simple_Sent) # remove  "...."
     Simple_Sent = re.sub('\(.*?\)', '', Simple_Sent) # remove (...)
-	
-       #print(Sentence.replace(t,''))
+    
     #Relative_Clause(Sentence)
     #non-restrictive
     #restrictive appositive phrases 
@@ -283,54 +283,12 @@ def Summarize_Story(filename,n_print):
     MainChar = MainCharacter(Text,n_print)
 
     sentences = TextFile_To_Sentences(filename)
+
     MainSents = SentsMainChar(sentences,MainChar)
     MainSents = Simplified_Sentences(MainSents)
     
     return MainSents
-    
 #_______________________________________________________________
-#https://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/#.XCXw9MaxU5k
-def Summary_Evaluation():
-    Time_read_original = 1
-    Time_read_summary = 1
-    Time_saved = Time_read_original/Time_read_summary
+#Summarize_Story(filename,15)
     
-    MainSentences = 1
-    TotalSentencesSummarized = 1
-    TotalSentences = 1
-    
-    Precision = MainSentences/TotalSentencesSummarized
-    Recall = MainSentences/TotalSentences
-    
-    Bleu = 1
-    Rouge = 1
-    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
-    
-    Total_words_summary = 1
-    Total_words_original = 1
-    Compressed_Rate = Total_words_summary / Total_words_original
-
-def Summary_Evaluation(MSummary,RSummary):
-    overlapping_ngrams    
-    MainSentences = 1
-    TotalSentencesSummarized = 1
-    TotalSentences = 1
-    
-    Precision = MainSentences/TotalSentencesSummarized
-    Recall = MainSentences/TotalSentences
-    
-    Bleu = 1
-    Rouge = 1
-    F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
-    
-    Total_words_summary = 1
-    Total_words_original = 1
-    Compressed_Rate = Total_words_summary / Total_words_original
-#_______________________________________________________________
-#Summarize_Story()
-Read_BBC_News_Summary()
-
-#Summarize_Story0()
-    
-#Sentence = 'Alan Turing was born in Maida Vale, London, while his father, Julius Mathison Turing , was on leave from his position with the Indian Civil Service (ICS) at Chatrapur, then in the Madras Presidency and presently in Odisha state, in British India.'
-#print (Simplified_Sentence(Sentence))
+#Read_BBC_News_Summary()
