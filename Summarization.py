@@ -8,6 +8,8 @@ Created on Mon Dec  3 16:05:59 2018
 import re
 import os
 import json
+import heapq  
+
 from os import listdir
 from os.path import isfile, join
 
@@ -15,22 +17,19 @@ from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 from nltk import pos_tag, word_tokenize
 
-from stanfordcorenlp import StanfordCoreNLP
 from nltk.tag import StanfordNERTagger
-
-import numpy as np
 
 import collections
 import pandas as pd
-
-from collections import Counter
 
 #https://summari.es/
 #https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
 #https://medium.com/agatha-codes/using-textual-analysis-to-quantify-a-cast-of-characters-4f3baecdb5c
 
 stopwords = stopwords.words('english')
-wordcount = {}
+word_frequencies = {}
+Weighted_frequencies = {}
+sentence_scores = {}
 PosList = []
 
 #_______________________________________________________________
@@ -65,62 +64,17 @@ def Preprocessing_Text(Text,punct):
     #print (Text)
     return Text
 
-#______________________________________________________________
-#https://summari.es/download/
-def Read_JsonFile():
-    path = '/home/polo/.config/spyder-py3/Co-referece/thin/test-shell.json'
-    #json_data = open(path)
-    #data = json.load(json_data)
-    data = []
-    with open(path) as f:
-        for line in f:
-            data.append(json.loads(line))
-            break
-    print (data)
-
 #_______________________________________________________________
 
-def Read_BBC_News_Summary():
-    News_Articles = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/News Articles'
-    Summaries = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Summaries'
-    Machine_Summary = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Machine Summary'
-    
-    SubDirectories = os.listdir(News_Articles)
-    
-    try:  
-        os.mkdir(Machine_Summary)
-    except OSError:  
-                print ("Creation of the directory %s failed" % Machine_Summary)
-    for subdir in os.listdir(News_Articles):
-        try:  
-            os.mkdir(Machine_Summary+'/'+subdir)
-        except OSError:  
-                print ("Creation of the directory %s failed" % subdir)
-
-    print (SubDirectories)
-    
-    n_print = int(input("How many most common words to print: "))
-    
-    for subdir in SubDirectories:
-        files = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
-        for f in files:
-            print(News_Articles+'/'+subdir+'/'+f)
-            MainSents = Summarize_Story(News_Articles+'/'+subdir+'/'+f,n_print)
-            with open(Machine_Summary+'/'+subdir+'/'+f, "w") as output:
-                 output.write("".join(MainSents))
-            
-        print('____________________________________________________')
-
-#_______________________________________________________________
 def Term_Frequecy(Text,punct):
     Text = Preprocessing_Text(Text,punct)
     for word in Text.lower().split():
         if word not in stopwords:
-           if word not in wordcount:
-              wordcount[word] = 1
+           if word not in word_frequencies:
+              word_frequencies[word] = 1
            else:
-                wordcount[word] += 1
-    #print(wordcount)
+                word_frequencies[word] += 1
+    
 #_______________________________________________________________
 
 def Text_tokenize(Text):
@@ -157,18 +111,12 @@ def find_proper_nouns(Tagged_Text):
     return proper_nouns
 
 #_______________________________________________________________
-
-def summarize_text(proper_nouns, top_num):
-    counts = dict(Counter(proper_nouns).most_common(top_num))
-    return counts
-
-#_______________________________________________________________
     
 def MainCharacter(Text,n_print):
     NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
     NER_Text = dict(NER_Text)
     
-    word_counter = collections.Counter(wordcount)
+    word_counter = collections.Counter(word_frequencies)
     MainChar = max(word_counter, key=word_counter.get)
     #print('Main Character :',MainChar)
     return MainChar
@@ -182,7 +130,7 @@ def SentsMainChar(sentences,MainChar):
         if MainChar in sent.lower():
            MainSents.append(sent)
     return MainSents
-
+   
 #_______________________________________________________________
 
 def MostCommon(n_print,Text):
@@ -198,7 +146,7 @@ def MostCommon(n_print,Text):
     #print (NER_Text)
     
     print("\nOK. The {} most common words are as follows\n".format(n_print))
-    word_counter = collections.Counter(wordcount)
+    word_counter = collections.Counter(word_frequencies)
     #print(word_counter)
     for word, count in word_counter.most_common(n_print):
         #print(word, ": ", count, ": ",Tagged_Text[word])
@@ -210,7 +158,7 @@ def MostCommon(n_print,Text):
 #_______________________________________________________________
 
 def DrawMostCommon(n_print):
-    word_counter = collections.Counter(wordcount)
+    word_counter = collections.Counter(word_frequencies)
     lst = word_counter.most_common(n_print)
     df = pd.DataFrame(lst, columns = ['Word', 'Count'])
     df.plot.bar(x='Word',y='Count')
@@ -289,6 +237,73 @@ def Summarize_Story(filename,n_print):
     
     return MainSents
 #_______________________________________________________________
+    
+def Summarize_Ranked_Sentences(filename):
+    Text,punct = Read_TextFile(filename)
+    Precessed_Text = Preprocessing_Text(Text,punct)
+
+    Term_Frequecy(Precessed_Text,punct)
+    
+    sentences = TextFile_To_Sentences(filename)
+
+    Weighted_frequencies = word_frequencies
+    maximum_frequncy = max(word_frequencies.values())
+    
+    for word in Weighted_frequencies.keys():  
+        Weighted_frequencies[word] = (Weighted_frequencies[word]/maximum_frequncy)
+        
+    for sent in sentences:  
+        for word in word_tokenize(sent.lower()):
+            if word in word_frequencies.keys():
+               if len(sent.split(' ')) < 30: 
+                  if sent not in sentence_scores.keys():
+                     sentence_scores[sent] = word_frequencies[word]
+                  else:
+                      sentence_scores[sent] += word_frequencies[word]
+    
+    summary_sentences = heapq.nlargest(7, sentence_scores, key=sentence_scores.get)
+    summary_sentences = Simplified_Sentences(summary_sentences)
+    #summary = ' '.join(summary_sentences)  
+    #print(summary)
+    return summary_sentences
+    
+#_______________________________________________________________
+
+def Read_BBC_News_Summary():
+    News_Articles = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/News Articles'
+    #Summaries = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Summaries'
+    Machine_Summary = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Machine Summary'
+    
+    SubDirectories = os.listdir(News_Articles)
+    
+    try:  
+        os.mkdir(Machine_Summary)
+    except OSError:  
+                print ("Creation of the directory %s failed" % Machine_Summary)
+    for subdir in os.listdir(News_Articles):
+        try:  
+            os.mkdir(Machine_Summary+'/'+subdir)
+        except OSError:  
+                print ("Creation of the directory %s failed" % subdir)
+
+    print (SubDirectories)
+    
+    #n_print = int(input("How many most common words to print: "))
+    
+    for subdir in SubDirectories:
+        files = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
+        for f in files:
+            print(News_Articles+'/'+subdir+'/'+f)
+            MainSents = Summarize_Ranked_Sentences(News_Articles+'/'+subdir+'/'+f)
+            #MainSents = Summarize_Story(News_Articles+'/'+subdir+'/'+f,n_print)
+            with open(Machine_Summary+'/'+subdir+'/'+f, "w") as output:
+                 output.write("".join(MainSents))
+            
+        print('____________________________________________________')
+
+#_______________________________________________________________
 #Summarize_Story(filename,15)
     
 #Read_BBC_News_Summary()
+        
+print(Summarize_Ranked_Sentences('Alan Turing.txt'))
