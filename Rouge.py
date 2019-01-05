@@ -34,17 +34,17 @@ def Rouge_N(N,MSummary, RefSummary):
       
     OverlapNgram = len([Ngram for Ngram in Ngrams1 if Ngram in Ngrams2])
        
-    Recall = OverlapNgram/len(Ngrams2)
-    Precision = OverlapNgram/len(Ngrams1)
+    Recall = round(OverlapNgram/len(Ngrams2),2)
+    Precision = round(OverlapNgram/len(Ngrams1),2)
     
     if OverlapNgram != 0:
-       F = (1+pow(N,2))*(Precision*Recall/(pow(N,2)*Precision)+ Recall)
+       F = round((1+pow(N,2))*(Precision*Recall/(pow(N,2)*Precision)+ Recall),2)
 
     weights = [0] * 4
     weights[N-1] = 1
     weights = tuple(weights)
     #print (weights)
-    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights)
+    Bleu = round(sentence_bleu([RefSummary.split()], MSummary.split(), weights),2)
     #Bleu = sentence_bleu([RefSummary.split()], MSummary.split())
     
     #print ('Bleu'+str(N)+' = ',Bleu)
@@ -142,7 +142,7 @@ def Summary_Evaluation(MSummary,RefSummary,OriginalDoc):
     
        Total_words_summary = len(Text1.split())
        Total_words_original = len(Text3.split())
-       Compressed_Rate = Total_words_summary / Total_words_original
+       Compressed_Rate = round(Total_words_summary / Total_words_original,2)
     
         #print ('Compressed Rate = ',Compressed_Rate)
     
@@ -172,36 +172,58 @@ def Evaluate_BBC_News_Summary():
     
        
     for subdir in SubDirectories:
-        FBleu1 = open(Evaluation_Summary+'/'+subdir+'/'+"Bleu1.txt","w+")
-        FRecall1 = open(Evaluation_Summary+'/'+subdir+'/'+"Recall1.txt","w+")
-        FPrecision1 = open(Evaluation_Summary+'/'+subdir+'/'+"Precision1.txt","w+")
-        FF1 = open(Evaluation_Summary+'/'+subdir+'/'+"F1.txt","w+")
+        FBleu1 = open(Evaluation_Summary+'/'+subdir+'/'+"Bleu1.csv","w+")
+        FRecall1 = open(Evaluation_Summary+'/'+subdir+'/'+"Recall1.csv","w+")
+        FPrecision1 = open(Evaluation_Summary+'/'+subdir+'/'+"Precision1.csv","w+")
+        FF1 = open(Evaluation_Summary+'/'+subdir+'/'+"F1.csv","w+")
     
-        FBleu2 = open(Evaluation_Summary+'/'+subdir+'/'+"Bleu2.txt","w+")
-        FRecall2 = open(Evaluation_Summary+'/'+subdir+'/'+"Recall2.txt","w+")
-        FPrecision2= open(Evaluation_Summary+'/'+subdir+'/'+"Precision2.txt","w+")
-        FF2 = open(Evaluation_Summary+'/'+subdir+'/'+"F2.txt","w+")
+        FBleu2 = open(Evaluation_Summary+'/'+subdir+'/'+"Bleu2.csv","w+")
+        FRecall2 = open(Evaluation_Summary+'/'+subdir+'/'+"Recall2.csv","w+")
+        FPrecision2= open(Evaluation_Summary+'/'+subdir+'/'+"Precision2.csv","w+")
+        FF2 = open(Evaluation_Summary+'/'+subdir+'/'+"F2.csv","w+")
     
-        FComp_Rate = open(Evaluation_Summary+'/'+subdir+'/'+"Compressed_Rate.txt","w+")
+        FComp_Rate = open(Evaluation_Summary+'/'+subdir+'/'+"Compressed_Rate.csv","w+")
 
         files = [f for f in listdir(News_Articles+'/'+subdir) if isfile(join(News_Articles+'/'+subdir, f))]    
-
+        
+        Bleus1 = []
+        Recalls1 = []
+        Precisions1 = []
+        Fs1 = []
+        Bleus2 = []
+        Recalls2 = []
+        Precisions2 = []
+        Fs2 = []
+        Compr_Rates = []
+        
         for f in files:
             print(News_Articles+'/'+subdir+'/'+f)
 
             Bleu1,Recall1,Precision1,F1,Bleu2,Recall2,Precision2,F2,Compressed_Rate = Summary_Evaluation(Machine_Summary+'/'+subdir+'/'+f, Summaries+'/'+subdir+'/'+f,News_Articles+'/'+subdir+'/'+f)
+           
+            Bleus1.append(Bleu1)
+            Recalls1.append(Recall1)
+            Precisions1.append(Precision1)
+            Fs1.append(F1)
+            Bleus2.append(Bleu2)
+            Recalls2.append(Recall2)
+            Precisions2.append(Precision2)
+            Fs2.append(F2)
+            Compr_Rates.append(Compressed_Rate)
             
-            FBleu1.write(str(Bleu1)+'\n')
-            FRecall1.write(str(Recall1)+'\n')
-            FPrecision1.write(str(Precision1)+'\n')
-            FF1.write(str(F1)+'\n')
+            #__________________________________________________________________
+            f = f.replace('.txt','')
+            FBleu1.write(f+','+str(Bleu1)+'\n')
+            FRecall1.write(f+','+str(Recall1)+'\n')
+            FPrecision1.write(f+','+str(Precision1)+'\n')
+            FF1.write(f+','+str(F1)+'\n')
             
-            FBleu2.write(str(Bleu2)+'\n')
-            FRecall2.write(str(Recall2)+'\n')
-            FPrecision2.write(str(Precision2)+'\n')
-            FF2.write(str(F2)+'\n')
+            FBleu2.write(f+','+str(Bleu2)+'\n')
+            FRecall2.write(f+','+str(Recall2)+'\n')
+            FPrecision2.write(f+','+str(Precision2)+'\n')
+            FF2.write(f+','+str(F2)+'\n')
             
-            FComp_Rate.write(str(Compressed_Rate)+'\n')
+            FComp_Rate.write(f+','+str(Compressed_Rate)+'\n')
             
         FBleu1.close()
         FRecall1.close()
@@ -214,6 +236,23 @@ def Evaluate_BBC_News_Summary():
         FF2.close()
     
         FComp_Rate.close()
+        
+        Statistics = open(Evaluation_Summary+'/'+subdir+'/'+'Statistics '+subdir+'.csv',"w+")
+
+        Statistics.write('Metrics,Min,Max,Avg\n')
+        Statistics.write('Bleu1,'+str(min(Bleus1))+','+str(max(Bleus1))+','+str(round(sum(Bleus1) / float(len(Bleus1)),2))+'\n')
+        Statistics.write('Recall1,'+str(min(Recalls1))+','+str(max(Recalls1))+','+str(round(sum(Recalls1) / float(len(Recalls1)),2))+'\n')
+        Statistics.write('Precision1,'+str(min(Precisions1))+','+str(max(Precisions1))+','+str(round(sum(Precisions1) / float(len(Precisions1)),2))+'\n')
+        Statistics.write('F1,'+str(min(Fs1))+','+str(max(Fs1))+','+str(round(sum(Fs1) / float(len(Fs1)),2))+'\n')
+
+        Statistics.write('Bleu2,'+str(min(Bleus2))+','+str(max(Bleus2))+','+str(round(sum(Bleus2) / float(len(Bleus2)),2))+'\n')
+        Statistics.write('Recall2,'+str(min(Recalls2))+','+str(max(Recalls2))+','+str(round(sum(Recalls2) / float(len(Recalls2)),2))+'\n')
+        Statistics.write('Precision2,'+str(min(Precisions2))+','+str(max(Precisions2))+','+str(round(sum(Precisions2) / float(len(Precisions2)),2))+'\n')
+        Statistics.write('F2,'+str(min(Fs1))+','+str(max(Fs2))+','+str(round(sum(Fs2) / float(len(Fs2)),2))+'\n')
+
+        Statistics.write('Compressed Rate,'+str(min(Compr_Rates))+','+str(max(Compr_Rates))+','+str(round(sum(Compr_Rates) / float(len(Compr_Rates)),2))+'\n')
+
+        Statistics.close()
 #_______________________________________________________________
 
 Evaluate_BBC_News_Summary()
