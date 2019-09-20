@@ -7,7 +7,6 @@ Created on Mon Dec  3 16:05:59 2018
 """
 import re
 import os
-import json
 import heapq  
 
 from os import listdir
@@ -22,15 +21,11 @@ from nltk.tag import StanfordNERTagger
 import collections
 import pandas as pd
 
+from gensim.summarization.summarizer import summarize
+
 #https://summari.es/
 #https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
 #https://medium.com/agatha-codes/using-textual-analysis-to-quantify-a-cast-of-characters-4f3baecdb5c
-
-stopwords = stopwords.words('english')
-word_frequencies = {}
-Weighted_frequencies = {}
-sentence_scores = {}
-PosList = []
 
 #_______________________________________________________________
 
@@ -67,13 +62,15 @@ def Preprocessing_Text(Text,punct):
 #_______________________________________________________________
 
 def Term_Frequecy(Text,punct):
+    word_frequencies = {}
     Text = Preprocessing_Text(Text,punct)
     for word in Text.lower().split():
-        if word not in stopwords:
+        if word not in stopwords.words('english'):
            if word not in word_frequencies:
               word_frequencies[word] = 1
            else:
                 word_frequencies[word] += 1
+    return word_frequencies
     
 #_______________________________________________________________
 
@@ -112,7 +109,7 @@ def find_proper_nouns(Tagged_Text):
 
 #_______________________________________________________________
     
-def MainCharacter(Text,n_print):
+def MainCharacter(Text,n_print,word_frequencies):
     NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
     NER_Text = dict(NER_Text)
     
@@ -133,13 +130,7 @@ def SentsMainChar(sentences,MainChar):
    
 #_______________________________________________________________
 
-def MostCommon(n_print,Text):
-    #Tagged_Text = Tagging(Text)
-    #Tagged_Text = [(x.lower(), y) for x,y in Tagged_Text]
-    #PosList = set([X[1] for X in Tagged_Text])
-    #print (PosList)
-    #print (Tagged_Text)
-    #Tagged_Text = dict(Tagged_Text)
+def MostCommon(n_print,Text,word_frequencies):
 
     NER_Text = [(x.lower(), y) for x,y in NE_Tagger(Text)]
     NER_Text = dict(NER_Text)
@@ -157,7 +148,7 @@ def MostCommon(n_print,Text):
         
 #_______________________________________________________________
 
-def DrawMostCommon(n_print):
+def DrawMostCommon(n_print,word_frequencies):
     word_counter = collections.Counter(word_frequencies)
     lst = word_counter.most_common(n_print)
     df = pd.DataFrame(lst, columns = ['Word', 'Count'])
@@ -239,10 +230,14 @@ def Summarize_Story(filename,n_print):
 #_______________________________________________________________
     
 def Summarize_Ranked_Sentences(filename):
+    word_frequencies = {}
+    Weighted_frequencies = {}
+    sentence_scores = {}
+
     Text,punct = Read_TextFile(filename)
     Precessed_Text = Preprocessing_Text(Text,punct)
 
-    Term_Frequecy(Precessed_Text,punct)
+    word_frequencies = Term_Frequecy(Precessed_Text,punct)
     
     sentences = TextFile_To_Sentences(filename)
 
@@ -302,8 +297,49 @@ def Read_BBC_News_Summary():
         print('____________________________________________________')
 
 #_______________________________________________________________
+        
+def Read_StoryTelling_Summary():
+    Stories = '/home/polo/.config/spyder-py3/Co-referece/Fairy tales/Storynory'
+    #Summaries = '/home/polo/.config/spyder-py3/Co-referece/BBC News Summary/Summaries'
+    Machine_Summary = '/home/polo/.config/spyder-py3/Co-referece/Fairy tales/Machine Summary'
+    
+    SubDirectories = os.listdir(Stories)
+    
+    try:  
+        os.mkdir(Machine_Summary)
+    except OSError:  
+                print ("Creation of the directory %s failed" % Machine_Summary)
+    for subdir in os.listdir(Stories):
+        try:  
+            os.mkdir(Machine_Summary+'/'+subdir)
+        except OSError:  
+                print ("Creation of the directory %s failed" % subdir)
+
+    print (SubDirectories)
+    
+    #n_print = int(input("How many most common words to print: "))
+    
+    for subdir in SubDirectories:
+        files = [f for f in listdir(Stories+'/'+subdir) if isfile(join(Stories+'/'+subdir, f))]    
+        for f in files:
+            print(Stories+'/'+subdir+'/'+f)
+            MainSents = Summarize_Ranked_Sentences(Stories+'/'+subdir+'/'+f)
+            #MainSents = Summarize_Story(News_Articles+'/'+subdir+'/'+f,n_print)
+            Text,punct = Read_TextFile(Stories+'/'+subdir+'/'+f)
+            with open(Machine_Summary+'/'+subdir+'/'+f, "w") as output:
+                 output.write("".join(MainSents))
+            
+            with open(Machine_Summary+'/'+subdir+'/TextRank.txt', "w") as output:
+                 output.write("".join(summarize(Text)))
+        print('____________________________________________________')
+        
+#_______________________________________________________________
+
 #Summarize_Story(filename,15)
     
 #Read_BBC_News_Summary()
-        
-print(Summarize_Ranked_Sentences('Alan Turing.txt'))
+Read_StoryTelling_Summary()
+
+#print(Summarize_Ranked_Sentences('Alan Turing.txt'))
+
+#print(Summarize_Ranked_Sentences('/home/polo/.config/spyder-py3/Co-referece/Fairy tales/Storynory/Hansel and Gretel/Hansel and Gretel.txt'))
