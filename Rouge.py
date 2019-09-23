@@ -57,51 +57,58 @@ def Rouge_N(N,MSummary, RefSummary):
 #_______________________________________________________________
 
 def Rouge1(MSummary, RefSummary):
-    OverlapWords = len([w for w in MSummary.split() if w in RefSummary.split()])
-       
+    Ngrams1 = set(word_tokenize(MSummary))
+    Ngrams2 = set(word_tokenize(RefSummary))
+        
+    #OverlapWords = len([w for w in MSummary.split() if w in RefSummary.split()])
+    
+    OverlapWords = len(Ngrams1.intersection(Ngrams2))
+    
     Recall = OverlapWords/len(RefSummary.split())
     Precision = OverlapWords/len(MSummary.split())
     
-    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights=(1, 0, 0, 0))
+    Bleu = sentence_bleu([RefSummary.split()], MSummary.split())#, weights=(1, 0, 0, 0))
 
     #F1 = 2 * (Bleu * Rouge) / (Bleu + Rouge)
-    F1 = 2*(Precision*Recall/Precision+ Recall)
+    F1 = (2*Precision*Recall)/(Precision+ Recall)
     
-    print ('Bleu1 = ',Bleu)
-    print ('R1_Recall = ',Recall)
-    print ('R1_Precision = ',Precision)
-    print ('F1 = ',F1)
+    print ('Bleu1 = ',round(Bleu,2))
+    print ('R1_Recall = ',round(Recall,2))
+    print ('R1_Precision = ',round(Precision,2))
+    print ('F1 = ',round(F1,2))
     
-    return Bleu,Recall,Precision,F1
+    return round(Bleu,2), round(Recall,2), round(Precision,2), round(F1,2)
 
 
 #_______________________________________________________________
     
 def Rouge2(MSummary, RefSummary):  
     tokens1 = word_tokenize(MSummary)
-    bigrms1 = nltk.bigrams(tokens1)
-    bigrms1 = list(ngrams(tokens1,2))
+    bigrms1 = set(list(nltk.bigrams(tokens1)))
+    #bigrms1 = list(ngrams(tokens1,2))
 
     tokens2 = word_tokenize(RefSummary)
-    bigrms2 = list(nltk.bigrams(tokens2))
+    bigrms2 = set(list(nltk.bigrams(tokens2)))
 
     #print(*map(' '.join, bigrms1), sep=', ')
     #print(*map(' '.join, bigrms2), sep=', ')
             
-    OverlapBigrams = len([val for val in list(bigrms1) if val in list(bigrms2)])
+    #OverlapBigrams = len([val for val in list(bigrms1) if val in list(bigrms2)])
+    OverlapBigrams = len(bigrms1.intersection(bigrms2))
+
     
     Recall = OverlapBigrams/len(bigrms2)
     Precision = OverlapBigrams/len(bigrms1)
     
-    Bleu = sentence_bleu([RefSummary.split()], MSummary.split(), weights=(0, 1, 0, 0))
-    F2 = (1+pow(2,2))*(Precision*Recall/(pow(2,2)*Precision)+ Recall)
+    Bleu = sentence_bleu([RefSummary.split()], MSummary.split())#, weights=(0, 1, 0, 0))
+    F2 = ((1+pow(2,2))*(Precision*Recall))/((pow(2,2)*Precision)+ Recall)
 
-    print ('Bleu2 = ',Bleu)
-    print ('R2_Recall = ',Recall)
-    print ('R2_Precision = ',Precision)
-    print ('F2 = ',F2)
+    print ('Bleu2 = ',round(Bleu,2))
+    print ('R2_Recall = ',round(Recall,2))
+    print ('R2_Precision = ',round(Precision,2))
+    print ('F2 = ',round(F2,2))
     
-    return Bleu,Recall,Precision,F2
+    return round(Bleu,2), round(Recall,2),round(Precision,2),round(F2,2)
 
 #_______________________________________________________________
 
@@ -130,14 +137,14 @@ def Summary_Evaluation(MSummary,RefSummary,OriginalDoc):
     Compressed_Rate = 0
     
     if Text1: 
-       #Bleu1,Recall1,Precision1,F1 = Rouge1(Text1, Text2)
+       Bleu1,Recall1,Precision1,F1 = Rouge1(Text1, Text2)
        #print ('.............................')
-       Bleu1,Recall1,Precision1,F1 = Rouge_N(1,Text1, Text2)
+       #Bleu1,Recall1,Precision1,F1 = Rouge_N(1,Text1, Text2)
        #print ('_____________________________')
     
-       #Bleu2,Recall2,Precision2,F2 = Rouge2(Text1, Text2)
+       Bleu2,Recall2,Precision2,F2 = Rouge2(Text1, Text2)
        #print ('.............................')
-       Bleu2,Recall2,Precision2,F2 = Rouge_N(2,Text1, Text2)
+       #Bleu2,Recall2,Precision2,F2 = Rouge_N(2,Text1, Text2)
        #print ('_____________________________')
     
        Total_words_summary = len(Text1.split())
@@ -205,14 +212,17 @@ def Evaluate_BBC_News_Summary():
             Recalls1.append(Recall1)
             Precisions1.append(Precision1)
             Fs1.append(F1)
+            
             Bleus2.append(Bleu2)
             Recalls2.append(Recall2)
             Precisions2.append(Precision2)
             Fs2.append(F2)
+            
             Compr_Rates.append(Compressed_Rate)
             
             #__________________________________________________________________
             f = f.replace('.txt','')
+            
             FBleu1.write(f+','+str(Bleu1)+'\n')
             FRecall1.write(f+','+str(Recall1)+'\n')
             FPrecision1.write(f+','+str(Precision1)+'\n')
@@ -354,7 +364,7 @@ def Evaluate_StoryTelling_Summary():
         Statistics.write('Bleu2,'+str(min(Bleus2))+','+str(max(Bleus2))+','+str(round(sum(Bleus2) / float(len(Bleus2)),2))+'\n')
         Statistics.write('Recall2,'+str(min(Recalls2))+','+str(max(Recalls2))+','+str(round(sum(Recalls2) / float(len(Recalls2)),2))+'\n')
         Statistics.write('Precision2,'+str(min(Precisions2))+','+str(max(Precisions2))+','+str(round(sum(Precisions2) / float(len(Precisions2)),2))+'\n')
-        Statistics.write('F2,'+str(min(Fs1))+','+str(max(Fs2))+','+str(round(sum(Fs2) / float(len(Fs2)),2))+'\n')
+        Statistics.write('F2,'+str(min(Fs2))+','+str(max(Fs2))+','+str(round(sum(Fs2) / float(len(Fs2)),2))+'\n')
 
         Statistics.write('Compressed Rate,'+str(min(Compr_Rates))+','+str(max(Compr_Rates))+','+str(round(sum(Compr_Rates) / float(len(Compr_Rates)),2))+'\n')
 
@@ -362,5 +372,5 @@ def Evaluate_StoryTelling_Summary():
 
 #_______________________________________________________________
         
-#Evaluate_BBC_News_Summary()
-Evaluate_StoryTelling_Summary()
+Evaluate_BBC_News_Summary()
+#Evaluate_StoryTelling_Summary()
